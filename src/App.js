@@ -4,31 +4,21 @@ import './App.css'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { setField, resetFields } from './redux'
-
-const initialState = {
-  name: '',
-  email: '',
-  ticketType: '',
-  food: false,
-  agreeTerms: false,
-  countdown: ''
-}
+import Input from './Input'
 
 const closeTime = moment('2018-04-01 12:00')
 
 class App extends Component {
-  state = initialState
   componentDidMount() {
     this.interval = setInterval(() => {
       const millis = closeTime.diff(moment())
       const duration = moment.duration(millis)
-      this.setState({
-        countdown: `${Math.floor(
-          duration.asHours()
-        )} hours ${duration.minutes()} 
+      this.props.setField(
+        'countdown',
+        `${Math.floor(duration.asHours())} hours ${duration.minutes()} 
         minutes ${duration.seconds()}
         seconds`
-      })
+      )
     }, 1000)
   }
   componentWillUnmount() {
@@ -41,15 +31,21 @@ class App extends Component {
       ticketType,
       food,
       agreeTerms,
-      countdown,
       setField,
-      resetFields
+      resetFields,
+      countdown
     } = this.props
     return (
       <section className="section">
         <div className="container">
           <h1 className="title">Evenn Registration Form</h1>
           <p>Registration will be closed in {countdown}</p>
+          <Input
+            value={name}
+            onChange={value => setField('name', value)}
+            placeholder="e.g. John Doe"
+            label="Name"
+          />
           <div className="field">
             <label className="label">Name</label>
             <div className="control">
@@ -153,4 +149,10 @@ class App extends Component {
   }
 }
 
-export default connect(state => state, { setField, resetFields })(App)
+// const mapDispatchToProps = { setField, resetFields }
+const mapDispatchToProps = dispatch => ({
+  setField: (key, value) => dispatch(setField(key, value)),
+  resetFields: () => dispatch(resetFields())
+})
+
+export default connect(state => state, mapDispatchToProps)(App)
