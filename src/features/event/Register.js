@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import './Register.css'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { setField, resetFields } from './redux'
-import Input from './Input'
+import Input from '../../common/Input'
 
 const closeTime = moment('2018-04-01 12:00')
 
